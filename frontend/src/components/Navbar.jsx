@@ -2,17 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaHome, FaStore, FaChartLine, FaUserCircle, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { translate } = useLanguage();
 
   const menuItems = [
-    { icon: FaHome, label: 'Dashboard', path: '/dashboard' },
-    { icon: FaStore, label: 'Marketplace', path: '/marketplace' },
-    { icon: FaChartLine, label: 'Analytics', path: '/analytics' },
-    { icon: FaUserCircle, label: 'Profile', path: '/profile' },
-    { icon: FaCog, label: 'Settings', path: '/settings' },
+    { icon: FaHome, label: translate('nav.dashboard'), path: '/dashboard' },
+    { icon: FaStore, label: translate('nav.marketplace'), path: '/marketplace' },
+    { icon: FaChartLine, label: translate('nav.analytics'), path: '/analytics' },
+    { icon: FaUserCircle, label: translate('nav.profile'), path: '/profile' },
+    { icon: FaCog, label: translate('nav.settings'), path: '/settings' },
   ];
 
   const handleLogout = () => {

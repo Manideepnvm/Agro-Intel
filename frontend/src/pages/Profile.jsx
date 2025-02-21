@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaUser, FaEdit, FaCheck, FaGlobe, FaShieldAlt, FaCog, FaLeaf, FaBriefcase, FaLanguage } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Profile = () => {
+  const { language, setLanguage, translate } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
   const [activeTab, setActiveTab] = useState('basic');
 
   const [userDetails, setUserDetails] = useState({
@@ -182,6 +183,18 @@ const Profile = () => {
     setMessage({ type: '', text: '' });
   };
 
+  const handleLanguageChange = (e) => {
+    const newLanguage = e.target.value;
+    setLanguage(newLanguage);
+    setEditedDetails(prev => ({
+      ...prev,
+      languagePreferences: {
+        ...prev.languagePreferences,
+        primaryLanguage: newLanguage
+      }
+    }));
+  };
+
   const renderBasicInfo = () => (
     <div className="space-y-6">
       {/* Profile Image Section */}
@@ -325,17 +338,18 @@ const Profile = () => {
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-white flex items-center gap-2">
         <FaLanguage className="w-5 h-5" />
-        Language Preferences
+        {translate('profile.language')}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Primary Language Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-300">Primary Language</label>
+          <label className="block text-sm font-medium text-gray-300">
+            {translate('profile.primaryLanguage')}
+          </label>
           <select
             name="primaryLanguage"
-            value={editedDetails.languagePreferences.primaryLanguage}
-            onChange={(e) => handleInputChange(e, 'languagePreferences')}
+            value={language}
+            onChange={handleLanguageChange}
             disabled={!isEditing}
             className="mt-1 w-full px-3 py-2 bg-black/30 border border-gray-600 rounded-lg text-white"
           >
@@ -729,7 +743,9 @@ const Profile = () => {
           className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
         >
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
+            <h1 className="text-3xl font-bold text-white">
+              {translate('profile.title')}
+            </h1>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -757,7 +773,7 @@ const Profile = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <span>{translate(`profile.${tab.id}`)}</span>
               </motion.button>
             ))}
           </div>
@@ -782,7 +798,7 @@ const Profile = () => {
                 className="px-4 py-2 bg-gray-600 text-white rounded-lg"
                 disabled={isSaving}
               >
-                Cancel
+                {translate('profile.cancel')}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -798,12 +814,12 @@ const Profile = () => {
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
-                    <span>Saving...</span>
+                    <span>{translate('profile.saving')}</span>
                   </>
                 ) : (
                   <>
                     <FaCheck className="w-4 h-4" />
-                    <span>Save Changes</span>
+                    <span>{translate('profile.saveChanges')}</span>
                   </>
                 )}
               </motion.button>
