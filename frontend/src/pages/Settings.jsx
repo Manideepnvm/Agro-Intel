@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaUser, FaEdit, FaCheck, FaGlobe, FaShieldAlt, FaCog, FaLeaf, FaBriefcase, FaLanguage } from 'react-icons/fa';
+import { FaUser, FaEdit, FaCheck, FaGlobe, FaShieldAlt, FaCog, FaLeaf, FaBriefcase, FaLanguage, FaCamera, FaExclamationCircle } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const Profile = () => {
+const Settings = () => {
   const { language, setLanguage, translate } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
+  const [imageError, setImageError] = useState('');
 
   const [userDetails, setUserDetails] = useState({
     // Basic Information
@@ -113,8 +114,9 @@ const Profile = () => {
         // const data = await response.json();
         // setUserDetails(data);
         // setEditedDetails(data);
-      } catch {
-        setMessage({ type: 'error', text: 'Failed to load profile data' });
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        // Handle error state appropriately
       }
     };
 
@@ -143,12 +145,25 @@ const Profile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Check file type
+      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        setImageError('Only JPG and PNG files are allowed');
+        return;
+      }
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setImageError('Image size should be less than 5MB');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setEditedDetails(prev => ({
           ...prev,
           profileImage: reader.result
         }));
+        setImageError('');
       };
       reader.readAsDataURL(file);
     }
@@ -171,6 +186,7 @@ const Profile = () => {
       setIsEditing(false);
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
     } catch (error) {
+      console.error('Failed to update profile:', error);
       setMessage({ type: 'error', text: 'Failed to update profile' });
     } finally {
       setIsSaving(false);
@@ -200,7 +216,7 @@ const Profile = () => {
       {/* Profile Image Section */}
       <div className="flex flex-col items-center space-y-4">
         <div className="relative">
-          <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-600">
+          <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-600 border-4 border-green-500/30">
             {editedDetails.profileImage ? (
               <img
                 src={editedDetails.profileImage}
@@ -208,20 +224,38 @@ const Profile = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <FaUser className="w-full h-full p-8 text-gray-400" />
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                <FaUser className="w-16 h-16" />
+              </div>
+            )}
+            {isEditing && (
+              <label className="absolute bottom-0 right-0 bg-green-500 p-2 rounded-full cursor-pointer hover:bg-green-600 transition-colors duration-200 group">
+                <FaCamera className="w-4 h-4 text-white" />
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".jpg,.jpeg,.png"
+                  onChange={handleImageChange}
+                />
+                <div className="absolute bottom-full right-0 mb-2 w-48 bg-black/90 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  Click to upload profile photo (JPG or PNG)
+                </div>
+              </label>
             )}
           </div>
-          {isEditing && (
-            <label className="absolute bottom-0 right-0 bg-green-500 p-2 rounded-full cursor-pointer">
-              <FaEdit className="w-4 h-4 text-white" />
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </label>
+          {imageError && (
+            <div className="mt-2 text-red-400 text-sm flex items-center gap-1">
+              <FaExclamationCircle className="w-4 h-4" />
+              <span>{imageError}</span>
+            </div>
           )}
+          <div className="mt-2 text-center text-gray-400 text-sm">
+            {isEditing ? (
+              "Click the camera icon to upload a photo"
+            ) : (
+              editedDetails.profileImage ? "Profile Photo" : "No photo uploaded"
+            )}
+          </div>
         </div>
       </div>
 
@@ -831,4 +865,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Settings; 

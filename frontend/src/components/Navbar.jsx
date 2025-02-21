@@ -13,8 +13,7 @@ const Navbar = () => {
     { icon: FaHome, label: translate('nav.dashboard'), path: '/dashboard' },
     { icon: FaStore, label: translate('nav.marketplace'), path: '/marketplace' },
     { icon: FaChartLine, label: translate('nav.analytics'), path: '/analytics' },
-    { icon: FaUserCircle, label: translate('nav.profile'), path: '/profile' },
-    { icon: FaCog, label: translate('nav.settings'), path: '/settings' },
+    { icon: FaUserCircle, label: translate('nav.settings'), path: '/settings' },
   ];
 
   const handleLogout = () => {

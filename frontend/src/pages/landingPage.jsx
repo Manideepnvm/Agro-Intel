@@ -17,15 +17,15 @@ const AnimatedSpheres = () => {
 
   return (
     <>
-      {positions.map((props, i) => (
-        <Sphere key={i} position={props.position} scale={props.scale}>
+      {positions.map((position, i) => (
+        <Sphere key={i} position={position.position} scale={position.scale}>
           <meshStandardMaterial
             color={new THREE.Color(0.1, 0.8, 0.3).lerp(
               new THREE.Color(0.1, 0.5, 1.0),
               Math.random()
             )}
-            roughness={0.4}
             metalness={0.8}
+            roughness={0.2} 
           />
         </Sphere>
       ))}

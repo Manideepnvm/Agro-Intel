@@ -4,7 +4,9 @@ import LandingPage from "./pages/landingPage";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Marketplace from "./pages/Marketplace";
+import Analytics from "./pages/Analytics";
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </Router>
     </LanguageProvider>
