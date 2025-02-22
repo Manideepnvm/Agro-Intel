@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaHome, FaStore, FaChartLine, FaUserCircle, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaHome, FaStore, FaChartLine, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Navbar = () => {
@@ -18,6 +18,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     // Add logout logic here
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/');
   };
 

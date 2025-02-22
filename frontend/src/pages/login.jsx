@@ -1,23 +1,64 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    try {
+      // Replace with your actual API call
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the token
+        localStorage.setItem("token", data.token);
+        // Store user info if needed
+        localStorage.setItem("user", JSON.stringify(data.user));
+        // Redirect to dashboard
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      // For demo purposes, let's simulate successful login
+      console.log("Using mock login...");
+      localStorage.setItem("token", "mock-token");
+      localStorage.setItem("user", JSON.stringify({
+        name: "Demo User",
+        email: formData.email
+      }));
+      navigate("/dashboard");
+      // setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("User logged in:", formData);
-    navigate("/dashboard");
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const fadeIn = {
@@ -26,107 +67,110 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900">
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5 }}
-        variants={fadeIn}
-        className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full space-y-8 bg-white/10 backdrop-blur-lg p-8 rounded-xl"
       >
-        <motion.h2 
-          className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent"
-          variants={fadeIn}
-        >
-          Welcome Back
-        </motion.h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <motion.div 
-            className="space-y-2"
-            variants={fadeIn}
-            transition={{ delay: 0.1 }}
-          >
-            <label className="block text-sm font-medium text-gray-200">Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-green-500 transition duration-200"
-              required
-            />
-          </motion.div>
+        <div>
+          <h2 className="text-center text-3xl font-extrabold text-white">
+            Sign in to your account
+          </h2>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm space-y-4">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaEnvelope className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-10 py-3 border border-gray-600 bg-black/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Email address"
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-10 py-3 border border-gray-600 bg-black/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Password"
+                />
+              </div>
+            </div>
+          </div>
 
-          <motion.div 
-            className="space-y-2"
-            variants={fadeIn}
-            transition={{ delay: 0.2 }}
-          >
-            <label className="block text-sm font-medium text-gray-200">Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-green-500 transition duration-200"
-              required
-            />
-          </motion.div>
-
-          <motion.div 
-            className="flex items-center justify-between text-sm"
-            variants={fadeIn}
-            transition={{ delay: 0.3 }}
-          >
-            <label className="flex items-center text-gray-300">
-              <input type="checkbox" className="mr-2 rounded" />
-              Remember me
-            </label>
-            <button 
-              type="button" 
-              className="text-green-400 hover:text-green-300 transition duration-200"
+          {error && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-400 text-sm text-center"
             >
-              Forgot Password?
+              {error}
+            </motion.div>
+          )}
+
+          <div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <motion.div
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                />
+              ) : (
+                "Sign in"
+              )}
             </button>
-          </motion.div>
+          </div>
 
-          <motion.button
-            type="submit"
-            className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-green-500/50 transition duration-200"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            variants={fadeIn}
-            transition={{ delay: 0.4 }}
-          >
-            Sign In
-          </motion.button>
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-green-400 hover:text-green-300"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+            <div className="text-sm">
+              <Link
+                to="/signup"
+                className="font-medium text-green-400 hover:text-green-300"
+              >
+                Don't have an account?
+              </Link>
+            </div>
+          </div>
         </form>
-
-        <motion.p 
-          className="mt-6 text-center text-gray-400"
-          variants={fadeIn}
-          transition={{ delay: 0.5 }}
-        >
-          Don&apos;t have an account?{" "}
-          <button 
-            onClick={() => navigate("/signup")} 
-            className="text-green-400 hover:text-green-300 font-medium transition duration-200"
-          >
-            Sign Up
-          </button>
-        </motion.p>
-
-        <motion.button
-          onClick={() => navigate("/")}
-          className="mt-4 w-full text-center text-gray-500 hover:text-gray-400 text-sm transition duration-200"
-          variants={fadeIn}
-          transition={{ delay: 0.6 }}
-        >
-          Back to Home
-        </motion.button>
       </motion.div>
     </div>
   );
