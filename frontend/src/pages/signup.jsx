@@ -155,7 +155,7 @@ const SignUp = () => {
           variants={fadeIn}
           transition={{ delay: 0.6 }}
         >
-          Already have an account?{" "}
+          Already have an account ?{" "}
           <button 
             onClick={() => navigate("/login")} 
             className="text-green-400 hover:text-green-300 font-medium transition duration-200"
