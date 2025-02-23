@@ -61,11 +61,6 @@ const Login = () => {
     });
   };
 
-  const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
@@ -166,7 +161,7 @@ const Login = () => {
                 to="/signup"
                 className="font-medium text-green-400 hover:text-green-300"
               >
-                Don't have an account?
+                Don&apos;t have an account?
               </Link>
             </div>
           </div>
