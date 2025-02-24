@@ -6,8 +6,8 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email : "",
+    password : "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
