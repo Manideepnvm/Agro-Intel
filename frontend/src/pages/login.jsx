@@ -44,8 +44,8 @@ const Login = () => {
       console.log("Using mock login...");
       localStorage.setItem("token", "mock-token");
       localStorage.setItem("user", JSON.stringify({
-        name: "Demo User",
-        email: formData.email
+        name : "Demo User",
+        email : formData.email
       }));
       navigate("/dashboard");
       // setError('Network error. Please try again.');
