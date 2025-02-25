@@ -6,8 +6,8 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email : "",
-    password : "",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,13 +39,13 @@ const Login = () => {
       } else {
         setError(data.message || "Login failed");
       }
-    } catch (err) {
+    } catch (error) {
       // For demo purposes, let's simulate successful login
       console.log("Using mock login...");
-      localStorage.setItem("token", "mock-token");
+      localStorage.setItem("token", "mock-token"); 
       localStorage.setItem("user", JSON.stringify({
-        name : "Demo User",
-        email : formData.email
+        name: "Demo User",
+        email: formData.email
       }));
       navigate("/dashboard");
       // setError('Network error. Please try again.');
