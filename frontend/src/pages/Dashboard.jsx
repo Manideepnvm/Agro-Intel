@@ -11,7 +11,9 @@ import {
   FaBookmark,
   FaChartLine,
   FaTractor,
-  FaCloudSun
+  FaCloudSun,
+  FaMapMarkerAlt,
+  FaSearch
 } from "react-icons/fa";
 
 const NewsCard = ({ item }) => {
@@ -85,11 +87,132 @@ NewsCard.propTypes = {
   }).isRequired
 };
 
+const WeatherCard = ({ location }) => {
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+
+  const fetchWeather = async (city) => {
+    try {
+      setLoading(true);
+      const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`
+      );
+      
+      // Process 5-day forecast
+      const forecasts = response.data.list.filter((item, index) => index % 8 === 0);
+      setWeather({
+        current: forecasts[0],
+        daily: forecasts,
+        city: response.data.city.name
+      });
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch weather data");
+      console.error("Weather fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWeather(location);
+  }, [location]);
+
+  const handleLocationSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      fetchWeather(searchQuery);
+      setSearchQuery("");
+      setShowSearch(false);
+    }
+  };
+
+  if (loading) return <p className="text-gray-300">Loading weather data...</p>;
+  if (error) return <p className="text-red-400">{error}</p>;
+  if (!weather) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white/10 backdrop-blur-lg p-6 rounded-xl relative"
+    >
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center space-x-2">
+          <FaCloudSun className="w-6 h-6 text-green-400" />
+          <h2 className="text-xl font-semibold text-white">Weather Forecast</h2>
+        </div>
+        <button
+          onClick={() => setShowSearch(!showSearch)}
+          className="text-gray-400 hover:text-white transition-colors"
+        >
+          <FaMapMarkerAlt className="w-5 h-5" />
+        </button>
+      </div>
+
+      {showSearch && (
+        <form onSubmit={handleLocationSearch} className="mb-4">
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Enter city name..."
+              className="flex-1 px-3 py-2 bg-black/30 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-500"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+            >
+              <FaSearch className="w-4 h-4" />
+            </button>
+          </div>
+        </form>
+      )}
+
+      <div className="text-gray-300 mb-4">
+        <p className="text-lg font-semibold text-white">{weather.city}</p>
+        <p className="text-3xl font-bold text-white mb-2">
+          {Math.round(weather.current.main.temp)}°C
+        </p>
+        <p>{weather.current.weather[0].description}</p>
+      </div>
+
+      <div className="grid grid-cols-5 gap-2">
+        {weather.daily.map((day, index) => (
+          <div key={index} className="text-center">
+            <p className="text-sm text-gray-400">
+              {new Date(day.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}
+            </p>
+            <p className="text-lg font-semibold text-white">
+              {Math.round(day.main.temp)}°C
+            </p>
+            <img
+              src={`http://openweathermap.org/img/wn/${day.weather[0].icon}.png`}
+              alt={day.weather[0].description}
+              className="w-8 h-8 mx-auto"
+            />
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+WeatherCard.propTypes = {
+  location: PropTypes.string.isRequired
+};
+
 const Dashboard = () => {
   const { language } = useLanguage();
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [defaultLocation, setDefaultLocation] = useState("Delhi");
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -174,13 +297,7 @@ const Dashboard = () => {
             <p className="text-gray-300 mt-2">Monitor your farming equipment</p>
           </motion.div>
 
-          <motion.div whileHover={{ scale: 1.02 }} className="bg-white/10 backdrop-blur-lg p-6 rounded-xl">
-            <div className="flex items-center space-x-3">
-              <FaCloudSun className="w-6 h-6 text-green-400" />
-              <h2 className="text-xl font-semibold text-white">Weather Forecast</h2>
-            </div>
-            <p className="text-gray-300 mt-2">5-day weather prediction for your region</p>
-          </motion.div>
+          <WeatherCard location={defaultLocation} />
         </div>
 
         {/* News Feed */}
