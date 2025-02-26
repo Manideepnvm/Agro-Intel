@@ -39,7 +39,7 @@ const Login = () => {
       } else {
         setError(data.message || "Login failed");
       }
-    } catch (error) {
+    } catch (err) {
       // For demo purposes, let's simulate successful login
       console.log("Using mock login...");
       localStorage.setItem("token", "mock-token"); 
