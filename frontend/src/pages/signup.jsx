@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { authService } from "../services/auth.service";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ const SignUp = () => {
 
   const [passwordMatch, setPasswordMatch] = useState(true);
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,13 +32,43 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!passwordMatch) {
       return;
     }
-    console.log("User signed up:", formData);
-    navigate("/login");
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const { user, token } = await authService.register(
+        formData.email, 
+        formData.password,
+        formData.username
+      );
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || formData.username
+      }));
+
+      navigate("/dashboard");
+    } catch (error) {
+      setError(
+        error.code === "auth/email-already-in-use"
+          ? "Email already in use"
+          : error.code === "auth/weak-password"
+          ? "Password should be at least 6 characters"
+          : error.code === "auth/invalid-email"
+          ? "Invalid email address"
+          : "Signup failed. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const fadeIn = {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { authService } from "../services/auth.service";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,37 +19,29 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Replace with your actual API call
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store the token
-        localStorage.setItem("token", data.token);
-        // Store user info if needed
-        localStorage.setItem("user", JSON.stringify(data.user));
-        // Redirect to dashboard
-        navigate("/dashboard");
-      } else {
-        setError(data.message || "Login failed");
-      }
-    } catch (err) {
-      // For demo purposes, let's simulate successful login
-      console.log("Using mock login...");
-      localStorage.setItem("token", "mock-token"); 
+      const { user, token } = await authService.login(formData.email, formData.password);
+      
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify({
-        name: "Demo User",
-        email: formData.email
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName
       }));
+      
       navigate("/dashboard");
-      // setError('Network error. Please try again.');
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(
+        error.code === "auth/user-not-found" 
+          ? "No account found with this email"
+          : error.code === "auth/wrong-password"
+          ? "Invalid password"
+          : error.code === "auth/too-many-requests"
+          ? "Too many failed attempts. Please try again later."
+          : error.code === "auth/invalid-email"
+          ? "Invalid email address"
+          : "Login failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }

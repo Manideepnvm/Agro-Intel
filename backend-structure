@@ -1,0 +1,32 @@
+agro-intel/
+├── frontend/          (existing)
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── firebase.js
+│   │   │   └── database.js
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── cropController.js
+│   │   │   └── predictionController.js
+│   │   ├── middleware/
+│   │   │   ├── auth.js
+│   │   │   └── validation.js
+│   │   ├── routes/
+│   │   │   ├── auth.js
+│   │   │   ├── crops.js
+│   │   │   └── predictions.js
+│   │   └── app.js
+│   ├── package.json
+│   └── .env
+└── ml-service/
+    ├── models/
+    │   ├── crop_prediction/
+    │   └── yield_prediction/
+    ├── api/
+    │   ├── app.py
+    │   └── routes.py
+    ├── training/
+    │   ├── notebooks/
+    │   └── datasets/
+    └── requirements.txt 
