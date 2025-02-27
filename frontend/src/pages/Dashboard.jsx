@@ -220,7 +220,7 @@ const Dashboard = () => {
       setError(null);
 
       const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-      const url = `https://newsapi.org/v2/everything?q=agriculture OR farming OR crops OR farmers&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
+      const url = `https://newsapi.org/v2/everything?q=agriculture AND India&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
 
       try {
         const response = await axios.get(url);
