@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import ReCAPTCHA from "react-google-recaptcha";
 import { authService } from "../services/auth.service";
+import { checkPasswordStrength } from "../utils/passwordStrength";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +17,13 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    isStrong: false,
+    feedback: []
+  });
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +31,10 @@ const SignUp = () => {
       ...prev,
       [name]: value
     }));
+
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value));
+    }
 
     if (name === 'confirmPassword' || name === 'password') {
       setPasswordMatch(
@@ -34,7 +47,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!passwordMatch) {
+    if (!passwordMatch || !passwordStrength.isStrong || !recaptchaToken) {
       return;
     }
 
@@ -42,23 +55,21 @@ const SignUp = () => {
     setError("");
 
     try {
-      const { user, token } = await authService.register(
+      const { emailSent } = await authService.register(
         formData.email, 
         formData.password,
-        formData.username
+        formData.username,
+        recaptchaToken
       );
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || formData.username
-      }));
-
-      navigate("/dashboard");
+      if (emailSent) {
+        setVerificationSent(true);
+      }
     } catch (error) {
       setError(
-        error.code === "auth/email-already-in-use"
+        error.message === 'Unable to connect to server. Please try again later.'
+          ? error.message
+          : error.code === "auth/email-already-in-use"
           ? "Email already in use"
           : error.code === "auth/weak-password"
           ? "Password should be at least 6 characters"
@@ -75,6 +86,55 @@ const SignUp = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+  // Add password strength indicator UI
+  const renderPasswordStrength = () => (
+    <div className="mt-2">
+      <div className="flex gap-1">
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className={`h-2 w-full rounded ${
+              i < passwordStrength.score
+                ? 'bg-green-500'
+                : 'bg-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+      {passwordStrength.feedback.map((feedback, index) => (
+        <p key={index} className="text-sm text-gray-400 mt-1">
+          {feedback}
+        </p>
+      ))}
+    </div>
+  );
+
+  // Add verification sent message
+  if (verificationSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md text-center"
+        >
+          <h2 className="text-2xl font-bold text-green-400 mb-4">
+            Verification Email Sent!
+          </h2>
+          <p className="text-gray-300 mb-4">
+            Please check your email to verify your account.
+          </p>
+          <button
+            onClick={() => authService.resendVerificationEmail()}
+            className="text-green-400 hover:text-green-300"
+          >
+            Resend verification email
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900">
@@ -170,16 +230,37 @@ const SignUp = () => {
             )}
           </motion.div>
 
+          {/* Add password strength indicator after password input */}
+          {formData.password && renderPasswordStrength()}
+
+          <motion.div 
+            className="space-y-2"
+            variants={fadeIn}
+            transition={{ delay: 0.5 }}
+          >
+            <label className="block text-sm font-medium text-gray-200">ReCAPTCHA</label>
+            <div className="mt-4">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                onChange={setRecaptchaToken}
+              />
+            </div>
+          </motion.div>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
+
           <motion.button
             type="submit"
             className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-green-500/50 transition duration-200"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            variants={fadeIn}
-            transition={{ delay: 0.5 }}
-            disabled={!passwordMatch}
+            disabled={!passwordMatch || !passwordStrength.isStrong || !recaptchaToken || isLoading}
           >
-            Create Account
+            {isLoading ? "Creating Account..." : "Create Account"}
           </motion.button>
         </form>
 
