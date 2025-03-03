@@ -1,11 +1,22 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('token'); // Replace with your auth check
+  const location = useLocation();
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('token');
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  useEffect(() => {
+    // Prevent going back to login page if authenticated
+    if (user && token) {
+      window.history.pushState(null, '', location.pathname);
+    }
+  }, [location, user, token]);
+
+  if (!user || !token) {
+    // Redirect to login with the attempted path
+    return <Navigate to="/login" state={{ from: location.pathname }} />;
   }
 
   return children;
