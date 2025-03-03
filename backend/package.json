@@ -4,7 +4,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "axios": "^1.6.7",
@@ -16,6 +16,6 @@
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.1.9"
   }
 }
