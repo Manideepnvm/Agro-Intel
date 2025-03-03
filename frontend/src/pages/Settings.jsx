@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { FaUser, FaEdit, FaCheck, FaGlobe, FaShieldAlt, FaCog, FaLeaf, FaBriefcase, FaLanguage, FaCamera, FaExclamationCircle } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../contexts/LanguageContext';
+import Sidebar from '../components/Sidebar';
+import { useNavigate } from 'react-router-dom';
+import { authService } from '../services/auth.service';
+import { userService } from '../services/user.service';
 
 const Settings = () => {
   const { language, setLanguage, translate } = useLanguage();
@@ -10,6 +14,40 @@ const Settings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
   const [imageError, setImageError] = useState('');
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [profile, setProfile] = useState({
+    displayName: '',
+    photoURL: '',
+    phoneNumber: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      country: '',
+      zipCode: ''
+    },
+    preferences: {
+      language: 'en',
+      notifications: {
+        email: true,
+        push: true
+      },
+      theme: 'dark'
+    },
+    farmDetails: {
+      farmName: '',
+      farmSize: '',
+      farmType: '',
+      farmLocation: {
+        type: 'Point',
+        coordinates: [0, 0]
+      },
+      mainCrops: []
+    },
+    userType: 'farmer'
+  });
 
   const [userDetails, setUserDetails] = useState({
     // Basic Information
@@ -107,21 +145,129 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        // API call would go here
-        // const response = await fetch('/api/user/profile');
-        // const data = await response.json();
-        // setUserDetails(data);
-        // setEditedDetails(data);
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-        // Handle error state appropriately
-      }
-    };
-
-    fetchUserDetails();
+    loadUserProfile();
   }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      const userData = await userService.getProfile();
+      // Ensure all required fields exist with default values
+      setProfile(prev => ({
+        ...prev,
+        ...userData,
+        preferences: {
+          ...prev.preferences,
+          ...userData.preferences
+        },
+        farmDetails: {
+          ...prev.farmDetails,
+          ...userData.farmDetails
+        },
+        address: {
+          ...prev.address,
+          ...userData.address
+        }
+      }));
+    } catch (error) {
+      console.error('Failed to load profile:', error);
+      setMessage({
+        text: error.message || 'Failed to load profile. Please try again.',
+        type: 'error'
+      });
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setProfile(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }));
+    } else {
+      setProfile(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      // Clean the profile data before sending
+      const cleanProfile = Object.fromEntries(
+        Object.entries(profile).filter(([key, value]) => {
+          // Keep non-empty values and non-object values
+          if (typeof value === 'object' && value !== null) {
+            // For objects, keep them if they have any non-empty values
+            return Object.values(value).some(v => v != null && v !== '');
+          }
+          return value != null && value !== '';
+        })
+      );
+
+      // Clean up farmDetails
+      if (cleanProfile.farmDetails) {
+        // Only keep valid farmType values
+        if (!['Organic', 'Traditional', 'Hydroponic', 'Mixed'].includes(cleanProfile.farmDetails.farmType)) {
+          delete cleanProfile.farmDetails.farmType;
+        }
+      }
+
+      // If the data is too large, it might be because of the image
+      if (JSON.stringify(cleanProfile).length > 5000000) { // 5MB
+        throw new Error('Profile data is too large. Please use a smaller profile picture.');
+      }
+
+      await userService.updateProfile(cleanProfile);
+      setMessage({
+        text: 'Profile updated successfully!',
+        type: 'success'
+      });
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      setMessage({
+        text: error.message || 'Failed to update profile. Please try again.',
+        type: 'error'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    setImageError('');
+    
+    try {
+      const url = await userService.uploadProfilePicture(file);
+      setProfile(prev => ({
+        ...prev,
+        photoURL: url
+      }));
+      setMessage({
+        text: 'Profile picture updated successfully!',
+        type: 'success'
+      });
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      setImageError(error.message || 'Failed to upload image. Please try again.');
+      setMessage({
+        text: error.message || 'Failed to upload image. Please try again.',
+        type: 'error'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleInputChange = (e, section = null) => {
     const { name, value, type, checked } = e.target;
@@ -166,30 +312,6 @@ const Settings = () => {
         setImageError('');
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      // Here you would make an API call to update the profile
-      // const response = await fetch('/api/user/profile', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(editedDetails)
-      // });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setUserDetails(editedDetails);
-      setIsEditing(false);
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
-    } catch (error) {
-      console.error('Failed to update profile:', error);
-      setMessage({ type: 'error', text: 'Failed to update profile' });
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -768,97 +890,166 @@ const Settings = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="flex h-screen bg-gray-900">
+      <Sidebar />
+      <div className="flex-1 overflow-auto p-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
+          className="max-w-4xl mx-auto"
         >
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-white">
-              {translate('profile.title')}
-            </h1>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsEditing(!isEditing)}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg"
-              disabled={isSaving}
-            >
-              {isEditing ? <FaCheck className="w-4 h-4" /> : <FaEdit className="w-4 h-4" />}
-              <span>{isEditing ? 'Save' : 'Edit'}</span>
-            </motion.button>
-          </div>
+          <h1 className="text-3xl font-bold text-white mb-8">Settings</h1>
 
-          {/* Tabs */}
-          <div className="flex space-x-2 mb-8 overflow-x-auto pb-2">
-            {tabs.map(tab => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
-                  activeTab === tab.id
-                    ? 'bg-green-500 text-white'
-                    : 'bg-black/30 text-gray-300 hover:bg-black/50'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span>{translate(`profile.${tab.id}`)}</span>
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Tab Content */}
-          <div className="mt-6">
-            {activeTab === 'basic' && renderBasicInfo()}
-            {activeTab === 'language' && renderLanguagePreferences()}
-            {activeTab === 'agriculture' && renderAgricultureDetails()}
-            {activeTab === 'business' && renderBusinessDetails()}
-            {activeTab === 'preferences' && renderPreferences()}
-            {activeTab === 'security' && renderSecurity()}
-          </div>
-
-          {/* Action Buttons */}
-          {isEditing && (
-            <div className="flex justify-end space-x-4 mt-8">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleCancel}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg"
-                disabled={isSaving}
-              >
-                {translate('profile.cancel')}
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleSave}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg flex items-center space-x-2"
-                disabled={isSaving}
-              >
-                {isSaving ? (
-                  <>
-                    <motion.div
-                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    />
-                    <span>{translate('profile.saving')}</span>
-                  </>
-                ) : (
-                  <>
-                    <FaCheck className="w-4 h-4" />
-                    <span>{translate('profile.saveChanges')}</span>
-                  </>
-                )}
-              </motion.button>
+          {message.text && (
+            <div className={`p-4 rounded-lg mb-6 ${
+              message.type === 'success' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
+            }`}>
+              {message.text}
             </div>
           )}
+
+          <div className="space-y-6">
+            {/* Profile Picture Section */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h2 className="text-xl font-semibold text-white mb-4">Profile Picture</h2>
+              <div className="flex items-center space-x-4">
+                <img
+                  src={profile.photoURL || '/default-avatar.png'}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="text-gray-300"
+                />
+              </div>
+            </div>
+
+            {/* Personal Information */}
+            <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+              <h2 className="text-xl font-semibold text-white mb-4">Personal Information</h2>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Display Name</label>
+                <input
+                  type="text"
+                  name="displayName"
+                  value={profile.displayName}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 text-white rounded p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={profile.phoneNumber}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 text-white rounded p-2"
+                />
+              </div>
+            </div>
+
+            {/* Farm Details */}
+            <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+              <h2 className="text-xl font-semibold text-white mb-4">Farm Details</h2>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Farm Name</label>
+                <input
+                  type="text"
+                  name="farmDetails.farmName"
+                  value={profile.farmDetails.farmName}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 text-white rounded p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 mb-2">Farm Size (acres)</label>
+                <input
+                  type="number"
+                  name="farmDetails.farmSize"
+                  value={profile.farmDetails.farmSize}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 text-white rounded p-2"
+                />
+              </div>
+            </div>
+
+            {/* Preferences */}
+            <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+              <h2 className="text-xl font-semibold text-white mb-4">Preferences</h2>
+              
+              <div>
+                <label className="block text-gray-300 mb-2">Language</label>
+                <select
+                  name="preferences.language"
+                  value={profile.preferences.language}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 text-white rounded p-2"
+                >
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <label className="text-gray-300">
+                  <input
+                    type="checkbox"
+                    name="preferences.notifications.email"
+                    checked={profile.preferences.notifications.email}
+                    onChange={e => handleChange({
+                      target: {
+                        name: 'preferences.notifications.email',
+                        value: e.target.checked
+                      }
+                    })}
+                    className="mr-2"
+                  />
+                  Email Notifications
+                </label>
+
+                <label className="text-gray-300">
+                  <input
+                    type="checkbox"
+                    name="preferences.notifications.push"
+                    checked={profile.preferences.notifications.push}
+                    onChange={e => handleChange({
+                      target: {
+                        name: 'preferences.notifications.push',
+                        value: e.target.checked
+                      }
+                    })}
+                    className="mr-2"
+                  />
+                  Push Notifications
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50"
+              >
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>
