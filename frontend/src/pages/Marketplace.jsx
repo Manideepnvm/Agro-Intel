@@ -3,10 +3,12 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import Navbar from '../components/Navbar';
 import { 
-  FaSearch, FaMicrophone, FaFilter, FaShoppingCart, 
+  FaMicrophone, FaFilter, FaShoppingCart, 
   FaStore, FaLeaf, FaTractor, FaHandshake, FaWhatsapp,
   FaMapMarkerAlt, FaRupeeSign, FaBullhorn 
 } from 'react-icons/fa';
+import MarketplaceData from '../../types/MarketplaceData';
+import PropTypes from 'prop-types';
 
 const Marketplace = () => {
   const { translate } = useLanguage();
@@ -21,6 +23,12 @@ const Marketplace = () => {
     sortBy: 'recent',
     type: 'all' // buy/sell/bid
   });
+  const [data,setData] = useState([])
+
+  const loadData = async () => {
+    await setData(MarketplaceData.marketplace)
+  }
+  console.log(MarketplaceData)
 
   const categories = [
     { id: 'all', label: 'All Items', icon: FaStore },
@@ -29,6 +37,10 @@ const Marketplace = () => {
     { id: 'organic', label: 'Organic Products', icon: FaLeaf },
     { id: 'land', label: 'Land & Lease', icon: FaHandshake }
   ];
+
+  useEffect(()=>{
+    loadData()
+  },[])
 
   useEffect(() => {
     fetchProducts();
@@ -89,7 +101,7 @@ const Marketplace = () => {
     >
       <div className="relative">
         <img 
-          src={product.images[0]} 
+          src={product.images} 
           alt={product.title}
           className="w-full h-48 object-cover rounded-lg"
         />
@@ -129,6 +141,19 @@ const Marketplace = () => {
     </motion.div>
   );
 
+  // Prop validation for ProductCard
+  ProductCard.propTypes = {
+    product: PropTypes.shape({
+      images: PropTypes.arrayOf(PropTypes.string).isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      quantity: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired,
+      location: PropTypes.string.isRequired,
+    }).isRequired,
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
       <Navbar />
@@ -161,21 +186,26 @@ const Marketplace = () => {
 
         {/* Categories */}
         <div className="flex space-x-4 overflow-x-auto pb-4 mb-8">
-          {categories.map(category => (
-            <motion.button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg whitespace-nowrap ${
-                activeCategory === category.id
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          {data?.map(category => (
+            // <motion.button
+            //   key={category.id}
+            //   onClick={() => setActiveCategory(category.id)}
+            //   className={`flex items-center space-x-2 px-4 py-2 rounded-lg whitespace-nowrap ${
+            //     activeCategory === category.id
+            //       ? 'bg-green-500 text-white'
+            //       : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            //   }`}
+            //   whileHover={{ scale: 1.05 }}
+            //   whileTap={{ scale: 0.95 }}
+            // >
+            //   <category.icon className="w-4 h-4" />
+            //   <span>{category.label}</span>
+            // </motion.button>
+            <div 
+              key={data.id}
             >
-              <category.icon className="w-4 h-4" />
-              <span>{category.label}</span>
-            </motion.button>
+              <h1>{data.category}</h1>
+            </div>
           ))}
         </div>
 
@@ -191,7 +221,7 @@ const Marketplace = () => {
               </div>
             ))
           ) : (
-            products.map(product => (
+            data.map(product => (
               <ProductCard key={product.id} product={product} />
             ))
           )}

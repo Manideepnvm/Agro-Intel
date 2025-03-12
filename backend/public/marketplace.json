@@ -1,0 +1,224 @@
+{
+    "marketplace": [
+      {
+        "id": 1,
+        "category": "Crops & Produce",
+        "name": "Organic Rice",
+        "description": "Fresh organic rice from Tamil Nadu farms",
+        "price": 5000,
+        "unit": "1 Quintal",
+        "location": "Chennai",
+        "tag": "crops",
+        "image": "organic_rice.jpg"
+      },
+      {
+        "id": 2,
+        "category": "Crops & Produce",
+        "name": "Wheat Grain",
+        "description": "Premium quality wheat grains from Punjab",
+        "price": 2200,
+        "unit": "1 Quintal",
+        "location": "Ludhiana",
+        "tag": "crops",
+        "image": "wheat.jpg"
+      },
+      {
+        "id": 3,
+        "category": "Crops & Produce",
+        "name": "Fresh Mangoes",
+        "description": "Sweet Alphonso mangoes directly from Ratnagiri",
+        "price": 1500,
+        "unit": "10 Kg",
+        "location": "Maharashtra",
+        "tag": "crops",
+        "image": "mangoes.jpg"
+      },
+      {
+        "id": 4,
+        "category": "Crops & Produce",
+        "name": "Potatoes",
+        "description": "Farm-fresh potatoes at wholesale rates",
+        "price": 700,
+        "unit": "50 Kg",
+        "location": "Uttar Pradesh",
+        "tag": "crops",
+        "image": "potatoes.jpg"
+      },
+      {
+        "id": 5,
+        "category": "Crops & Produce",
+        "name": "Tomatoes",
+        "description": "Fresh red tomatoes straight from farms",
+        "price": 600,
+        "unit": "25 Kg",
+        "location": "Karnataka",
+        "tag": "crops",
+        "image": "tomatoes.jpg"
+      },
+      {
+        "id": 6,
+        "category": "Seeds & Fertilizers",
+        "name": "Hybrid Maize Seeds",
+        "description": "High-yield hybrid maize seeds for better farming",
+        "price": 1200,
+        "unit": "10 Kg",
+        "location": "Punjab",
+        "tag": "seeds",
+        "image": "hybrid_maize.jpg"
+      },
+      {
+        "id": 7,
+        "category": "Seeds & Fertilizers",
+        "name": "Organic Vegetable Seeds Pack",
+        "description": "Collection of organic seeds for home gardening",
+        "price": 500,
+        "unit": "1 Set",
+        "location": "Delhi",
+        "tag": "seeds",
+        "image": "veg_seeds.jpg"
+      },
+      {
+        "id": 8,
+        "category": "Seeds & Fertilizers",
+        "name": "Paddy Seeds",
+        "description": "High-yield variety paddy seeds",
+        "price": 950,
+        "unit": "10 Kg",
+        "location": "West Bengal",
+        "tag": "seeds",
+        "image": "paddy_seeds.jpg"
+      },
+      {
+        "id": 9,
+        "category": "Seeds & Fertilizers",
+        "name": "Urea Fertilizer",
+        "description": "Essential nitrogen fertilizer for crops",
+        "price": 450,
+        "unit": "50 Kg",
+        "location": "Haryana",
+        "tag": "fertilizer",
+        "image": "urea.jpg"
+      },
+      {
+        "id": 10,
+        "category": "Seeds & Fertilizers",
+        "name": "Compost Fertilizer",
+        "description": "Organic compost for improving soil fertility",
+        "price": 600,
+        "unit": "50 Kg",
+        "location": "Tamil Nadu",
+        "tag": "fertilizer",
+        "image": "compost.jpg"
+      },
+      {
+        "id": 11,
+        "category": "Organic Products",
+        "name": "Organic Manure",
+        "description": "100% natural organic manure for soil enrichment",
+        "price": 800,
+        "unit": "50 Kg",
+        "location": "Maharashtra",
+        "tag": "organic",
+        "image": "organic_manure.jpg"
+      },
+      {
+        "id": 12,
+        "category": "Organic Products",
+        "name": "Cow Dung Cakes",
+        "description": "Sun-dried cow dung cakes for farming & religious use",
+        "price": 250,
+        "unit": "20 Pieces",
+        "location": "Rajasthan",
+        "tag": "organic",
+        "image": "cow_dung.jpg"
+      },
+      {
+        "id": 13,
+        "category": "Organic Products",
+        "name": "Neem Oil",
+        "description": "Pure neem oil for organic pest control",
+        "price": 900,
+        "unit": "5 Litres",
+        "location": "Andhra Pradesh",
+        "tag": "organic",
+        "image": "neem_oil.jpg"
+      },
+      {
+        "id": 14,
+        "category": "Organic Products",
+        "name": "Vermicompost",
+        "description": "Eco-friendly organic vermicompost fertilizer",
+        "price": 700,
+        "unit": "25 Kg",
+        "location": "Gujarat",
+        "tag": "organic",
+        "image": "vermicompost.jpg"
+      },
+      {
+        "id": 15,
+        "category": "Organic Products",
+        "name": "Organic Honey",
+        "description": "Pure natural honey directly from beekeepers",
+        "price": 350,
+        "unit": "1 Kg",
+        "location": "Himachal Pradesh",
+        "tag": "organic",
+        "image": "honey.jpg"
+      },
+      {
+        "id": 16,
+        "category": "Land & Lease",
+        "name": "2 Acres Farmland",
+        "description": "Fertile land available for lease in Karnataka",
+        "price": 15000,
+        "unit": "per month",
+        "location": "Bangalore",
+        "tag": "land",
+        "image": "farmland.jpg"
+      },
+      {
+        "id": 17,
+        "category": "Land & Lease",
+        "name": "5 Acres Mango Farm",
+        "description": "Mango farm for lease with irrigation facility",
+        "price": 25000,
+        "unit": "per month",
+        "location": "Maharashtra",
+        "tag": "land",
+        "image": "mango_farm.jpg"
+      },
+      {
+        "id": 18,
+        "category": "Land & Lease",
+        "name": "Agricultural Land for Sale",
+        "description": "10 acres of prime agricultural land",
+        "price": 5000000,
+        "unit": "total",
+        "location": "Punjab",
+        "tag": "land",
+        "image": "agri_land.jpg"
+      },
+      {
+        "id": 19,
+        "category": "Land & Lease",
+        "name": "Irrigated Farmland",
+        "description": "Land with modern irrigation facilities",
+        "price": 18000,
+        "unit": "per month",
+        "location": "Kerala",
+        "tag": "land",
+        "image": "irrigated_land.jpg"
+      },
+      {
+        "id": 20,
+        "category": "Land & Lease",
+        "name": "Dairy Farm Land",
+        "description": "Land suitable for dairy farming",
+        "price": 20000,
+        "unit": "per month",
+        "location": "Haryana",
+        "tag": "land",
+        "image": "dairy_farm.jpg"
+      }
+    ]
+  }
