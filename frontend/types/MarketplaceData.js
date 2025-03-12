@@ -8,7 +8,7 @@ const marketplace = [
     unit: "1 Quintal",
     location: "Chennai",
     tag: "crops",
-    image: "organic_rice.jpg",
+    image: "https://source.unsplash.com/400x300/?rice",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const marketplace = [
     unit: "1 Quintal",
     location: "Ludhiana",
     tag: "crops",
-    image: "wheat.jpg",
+    image: "https://source.unsplash.com/400x300/?wheat",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "Maharashtra",
     tag: "crops",
-    image: "mangoes.jpg",
+    image: "https://source.unsplash.com/400x300/?mango",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Uttar Pradesh",
     tag: "crops",
-    image: "potatoes.jpg",
+    image: "https://source.unsplash.com/400x300/?potato",
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ const marketplace = [
     unit: "25 Kg",
     location: "Karnataka",
     tag: "crops",
-    image: "tomatoes.jpg",
+    image: "https://source.unsplash.com/400x300/?tomato",
   },
   {
     id: 6,
@@ -63,7 +63,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "Punjab",
     tag: "seeds",
-    image: "hybrid_maize.jpg",
+    image: "https://source.unsplash.com/400x300/?maize",
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ const marketplace = [
     unit: "1 Set",
     location: "Delhi",
     tag: "seeds",
-    image: "veg_seeds.jpg",
+    image: "https://source.unsplash.com/400x300/?seeds",
   },
   {
     id: 8,
@@ -85,7 +85,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "West Bengal",
     tag: "seeds",
-    image: "paddy_seeds.jpg",
+    image: "https://source.unsplash.com/400x300/?paddy",
   },
   {
     id: 9,
@@ -96,7 +96,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Haryana",
     tag: "fertilizer",
-    image: "urea.jpg",
+    image: "https://source.unsplash.com/400x300/?fertilizer",
   },
   {
     id: 10,
@@ -107,7 +107,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Tamil Nadu",
     tag: "fertilizer",
-    image: "compost.jpg",
+    image: "https://source.unsplash.com/400x300/?compost",
   },
   {
     id: 11,
@@ -118,7 +118,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Maharashtra",
     tag: "organic",
-    image: "organic_manure.jpg",
+    image: "https://source.unsplash.com/400x300/?organic",
   },
   {
     id: 12,
@@ -129,7 +129,7 @@ const marketplace = [
     unit: "20 Pieces",
     location: "Rajasthan",
     tag: "organic",
-    image: "cow_dung.jpg",
+    image: "https://source.unsplash.com/400x300/?cow",
   },
   {
     id: 13,
@@ -140,7 +140,7 @@ const marketplace = [
     unit: "5 Litres",
     location: "Andhra Pradesh",
     tag: "organic",
-    image: "neem_oil.jpg",
+    image: "https://source.unsplash.com/400x300/?neem",
   },
   {
     id: 14,
@@ -151,7 +151,7 @@ const marketplace = [
     unit: "25 Kg",
     location: "Gujarat",
     tag: "organic",
-    image: "vermicompost.jpg",
+    image: "https://source.unsplash.com/400x300/?vermicompost",
   },
   {
     id: 15,
@@ -162,7 +162,7 @@ const marketplace = [
     unit: "1 Kg",
     location: "Himachal Pradesh",
     tag: "organic",
-    image: "honey.jpg",
+    image: "https://source.unsplash.com/400x300/?honey",
   },
   {
     id: 16,
@@ -173,7 +173,7 @@ const marketplace = [
     unit: "per month",
     location: "Bangalore",
     tag: "land",
-    image: "farmland.jpg",
+    image: "https://source.unsplash.com/400x300/?farm",
   },
   {
     id: 17,
@@ -184,7 +184,7 @@ const marketplace = [
     unit: "per month",
     location: "Maharashtra",
     tag: "land",
-    image: "mango_farm.jpg",
+    image: "https://source.unsplash.com/400x300/?mango-farm",
   },
   {
     id: 18,
@@ -195,7 +195,7 @@ const marketplace = [
     unit: "total",
     location: "Punjab",
     tag: "land",
-    image: "agri_land.jpg",
+    image: "https://source.unsplash.com/400x300/?land",
   },
   {
     id: 19,
@@ -206,7 +206,7 @@ const marketplace = [
     unit: "per month",
     location: "Kerala",
     tag: "land",
-    image: "irrigated_land.jpg",
+    image: "https://source.unsplash.com/400x300/?irrigation",
   },
   {
     id: 20,
@@ -217,7 +217,7 @@ const marketplace = [
     unit: "per month",
     location: "Haryana",
     tag: "land",
-    image: "dairy_farm.jpg",
+    image: "https://source.unsplash.com/400x300/?dairy",
   },
 ];
 
