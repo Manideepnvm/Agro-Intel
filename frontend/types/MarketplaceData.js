@@ -8,7 +8,7 @@ const marketplace = [
     unit: "1 Quintal",
     location: "Chennai",
     tag: "crops",
-    image: "https://source.unsplash.com/400x300/?rice",
+    image: "https://thefactfactor.com/wp-content/uploads/2019/07/Crops.png",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const marketplace = [
     unit: "1 Quintal",
     location: "Ludhiana",
     tag: "crops",
-    image: "https://source.unsplash.com/400x300/?wheat",
+    image: "https://housing.com/news/types-of-crops/",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "Maharashtra",
     tag: "crops",
-    image: "https://source.unsplash.com/400x300/?mango",
+    image: "https://education.nationalgeographic.org/resource/crops/",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Uttar Pradesh",
     tag: "crops",
-    image: "https://source.unsplash.com/400x300/?potato",
+    image: "https://www.dreamstime.com/photos-images/different-crops.html",
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ const marketplace = [
     unit: "25 Kg",
     location: "Karnataka",
     tag: "crops",
-    image: "https://source.unsplash.com/400x300/?tomato",
+    image: "https://www.dreamstime.com/photos-images/over-farming.html",
   },
   {
     id: 6,
@@ -63,7 +63,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "Punjab",
     tag: "seeds",
-    image: "https://source.unsplash.com/400x300/?maize",
+    image: "https://eos.com/blog/nitrogen-fertilizers/",
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ const marketplace = [
     unit: "1 Set",
     location: "Delhi",
     tag: "seeds",
-    image: "https://source.unsplash.com/400x300/?seeds",
+    image: "https://www.tradeindia.com/products/nitrogen-fertilizer-liquid-nitrogen-lawn-food-7569292.html",
   },
   {
     id: 8,
@@ -85,7 +85,7 @@ const marketplace = [
     unit: "10 Kg",
     location: "West Bengal",
     tag: "seeds",
-    image: "https://source.unsplash.com/400x300/?paddy",
+    image: "https://www.amazon.in/PLANTIC-Fertilizer-Seedlings-Germination-Bio-Fertilizer/dp/B08Y4CSVCC",
   },
   {
     id: 9,
@@ -96,7 +96,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Haryana",
     tag: "fertilizer",
-    image: "https://source.unsplash.com/400x300/?fertilizer",
+    image: "https://www.indiamart.com/proddetail/single-super-phosphate-ssp-2852557139791.html",
   },
   {
     id: 10,
@@ -107,7 +107,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Tamil Nadu",
     tag: "fertilizer",
-    image: "https://source.unsplash.com/400x300/?compost",
+    image: "https://mankindag.com/benefits-of-using-chemical-fertilizers-for-crop-production/",
   },
   {
     id: 11,
@@ -118,7 +118,7 @@ const marketplace = [
     unit: "50 Kg",
     location: "Maharashtra",
     tag: "organic",
-    image: "https://source.unsplash.com/400x300/?organic",
+    image: "https://www.shutterstock.com/search/organic-food",
   },
   {
     id: 12,
@@ -129,7 +129,7 @@ const marketplace = [
     unit: "20 Pieces",
     location: "Rajasthan",
     tag: "organic",
-    image: "https://source.unsplash.com/400x300/?cow",
+    image: "https://okcredit.in/blog/what-are-organic-products/",
   },
   {
     id: 13,
@@ -140,7 +140,7 @@ const marketplace = [
     unit: "5 Litres",
     location: "Andhra Pradesh",
     tag: "organic",
-    image: "https://source.unsplash.com/400x300/?neem",
+    image: "https://indianexpress.com/article/lifestyle/food-wine/sustainable-living-why-consuming-organic-food-important-6069991/",
   },
   {
     id: 14,
@@ -151,7 +151,7 @@ const marketplace = [
     unit: "25 Kg",
     location: "Gujarat",
     tag: "organic",
-    image: "https://source.unsplash.com/400x300/?vermicompost",
+    image: "https://www.researchdive.com/blog/wonderful-health-benefits-of-organic-food-and-few-tips-on-buying",
   },
   {
     id: 15,
@@ -162,7 +162,7 @@ const marketplace = [
     unit: "1 Kg",
     location: "Himachal Pradesh",
     tag: "organic",
-    image: "https://source.unsplash.com/400x300/?honey",
+    image: "https://www.skh.com/thedish/types-of-organic-food/",
   },
   {
     id: 16,
@@ -173,7 +173,7 @@ const marketplace = [
     unit: "per month",
     location: "Bangalore",
     tag: "land",
-    image: "https://source.unsplash.com/400x300/?farm",
+    image: "https://www.shutterstock.com/search/types-lands?page=8",
   },
   {
     id: 17,
@@ -184,7 +184,7 @@ const marketplace = [
     unit: "per month",
     location: "Maharashtra",
     tag: "land",
-    image: "https://source.unsplash.com/400x300/?mango-farm",
+    image: "https://www.shutterstock.com/search/land-exploitation",
   },
   {
     id: 18,
@@ -195,7 +195,7 @@ const marketplace = [
     unit: "total",
     location: "Punjab",
     tag: "land",
-    image: "https://source.unsplash.com/400x300/?land",
+    image: "https://www.dreamstime.com/photos-images/land-lease.html",
   },
   {
     id: 19,
@@ -206,7 +206,7 @@ const marketplace = [
     unit: "per month",
     location: "Kerala",
     tag: "land",
-    image: "https://source.unsplash.com/400x300/?irrigation",
+    image: "https://stock.adobe.com/search?k=land",
   },
   {
     id: 20,
@@ -217,7 +217,7 @@ const marketplace = [
     unit: "per month",
     location: "Haryana",
     tag: "land",
-    image: "https://source.unsplash.com/400x300/?dairy",
+    image: "https://www.shutterstock.com/search/el-paso-desert",
   },
 ];
 
