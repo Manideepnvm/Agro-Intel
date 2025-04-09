@@ -57,7 +57,7 @@ const Sidebar = () => {
           />
           {!isCollapsed && (
             <span className="text-xl font-bold text-white">
-              Agro Intel
+              Agro-Intel
             </span>
           )}
         </Link>
