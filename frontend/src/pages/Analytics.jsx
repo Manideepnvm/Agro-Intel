@@ -51,7 +51,7 @@ const Analytics = () => {
           { name: 'Rice', value: 400, price: 35 },
           { name: 'Wheat', value: 300, price: 28 },
           { name: 'Cotton', value: 300, price: 45 },
-          { name: 'Pulses', value: 200, price: 52 }
+          { name: 'Peas', value: 200, price: 52 }
         ],
         buyers: [
           { category: 'Retailers', count: 45 },
