@@ -33,7 +33,7 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             className="flex items-center space-x-4"
           >
-            <span className="text-2xl font-bold bg-gradient-to-r from-green-450 to-emerald-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-green-450 to-emerald-600 bg-clip-text ">
               Agro-Intel
             </span>
           </motion.div>
